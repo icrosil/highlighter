@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Text from './Text';
+import Editor from './Editor';
 import Selections from './Selections';
 import './Highlighter.css';
 
 const Highlighter = () => (
   <main className="highlighter">
-    <Text />
+    <Editor />
     <Selections />
   </main>
 );

@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "immutable": "^3.8.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.4"
+    "react-scripts": "2.0.4",
+    "slate": "^0.42.2",
+    "slate-react": "^0.19.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -29,8 +32,8 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json}": [
-       "prettier --single-quote --write",
-       "git add"
+      "prettier --single-quote --write",
+      "git add"
     ]
   },
   "devDependencies": {
