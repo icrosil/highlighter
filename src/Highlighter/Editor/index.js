@@ -41,14 +41,11 @@ class RichTextEditor extends Component {
   }
 
   renderMarkButton = (type, icon) => {
-    const isActive = this.hasMark(type);
-
     // TODO show somehow is current mode active and which selection it is
+    // const isActive = this.hasMark(type);
+
     return (
-      <button
-        active={isActive}
-        onMouseDown={event => this.onClickMark(event, type)}
-      >
+      <button onMouseDown={event => this.onClickMark(event, type)}>
         {icon}
       </button>
     );
@@ -66,22 +63,38 @@ class RichTextEditor extends Component {
   };
 
   onChange = ({ value }) => {
+    // get all text - value.document.text
+    // TODO get count of all marks in text
+    // TODO get their position or texts
     this.setState({ value });
   };
 
   onSelect = (event, { value }, next) => {
+    next();
+  };
+
+  getSelection = value => {
+    const { focusText } = value;
     const domRange = findDOMRange(value.selection);
     const { startOffset, endOffset } = domRange;
-    console.log(startOffset, 'startOffset');
-    console.log(endOffset, 'endOffset');
-    console.log(domRange, 'rest');
-    next();
+    const text = focusText.text.slice(startOffset, endOffset);
+    return {
+      text, // text highlighted
+      focusText, // Text object of element
+      startOffset, // start point in Text
+      endOffset, // end point in Text
+    };
   };
 
   onClickMark = (event, type) => {
     event.preventDefault();
-
+    const { addSelection } = this.props;
     this.editor.change(change => {
+      const selection = this.getSelection(change.value);
+      addSelection(selection);
+      // TODO get range of selection within all text
+      // TODO check overlapping
+      // TODO make overlap logic
       change.toggleMark(type);
     });
   };

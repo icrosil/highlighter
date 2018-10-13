@@ -3,10 +3,11 @@ import React from 'react';
 import Selection from './Selection';
 import './Selections.css';
 
-const Selections = () => (
+const Selections = ({ selections }) => (
   <section className="selections">
-    <Selection />
-    <Selection />
+    {selections.map((selection, index) => (
+      <Selection key={index} selection={selection} index={index} />
+    ))}
   </section>
 );
 
