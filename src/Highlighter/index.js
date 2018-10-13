@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import isEqual from 'lodash/isEqual';
 
 import Editor from './Editor';
 import Selections from './Selections';
@@ -10,12 +11,12 @@ class Highlighter extends Component {
   };
   toggleSelection = selection => {
     const { selections } = this.state;
-    const alreadyExist = selections.some(
-      selectionCompare => selection.key === selectionCompare.key,
+    const alreadyExist = selections.some(selectionCompare =>
+      isEqual(selection, selectionCompare),
     );
     if (alreadyExist) {
       const filtered = selections.filter(
-        selectionCompare => selection.key !== selectionCompare.key,
+        selectionCompare => !isEqual(selection, selectionCompare),
       );
       this.setState({
         selections: filtered,

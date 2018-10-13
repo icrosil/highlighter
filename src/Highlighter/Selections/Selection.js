@@ -2,8 +2,10 @@ import React from 'react';
 
 const Selection = ({ selection, index }) => (
   <div>
-    <div>{index}</div>
-    {selection.text}
+    <div>
+      <b>Selection {index + 1}:</b>
+    </div>
+    <code>{selection.text}</code>
   </div>
 );
 
