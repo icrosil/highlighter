@@ -9,10 +9,6 @@
   padding: 15px;
 }
 
-.slate code {
-  background: red;
-}
-
 .toolbar {
   border-bottom: 1px solid #ccc;
   border-color: #f44336;

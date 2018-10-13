@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "faker": "^4.1.0",
     "immutable": "^3.8.2",
     "lodash": "^4.17.11",
     "react": "^16.5.2",

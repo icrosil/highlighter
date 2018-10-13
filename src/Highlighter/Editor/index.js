@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 import { Editor } from 'slate-react';
 import initialValue from './initialValue';
 import './Editor.css';
+import { getRandomColor } from './color';
 
 class HighlightEditor extends Component {
   state = {
     value: initialValue,
   };
+  selections = [];
 
   hasMark = type => {
     const { value } = this.state;
@@ -52,11 +54,23 @@ class HighlightEditor extends Component {
   };
 
   renderMark = (props, next) => {
-    const { children, mark, attributes } = props;
-
+    const { children, mark, attributes, offset, text } = props;
+    const currentSelection =
+      this.selections.find(
+        selection =>
+          selection.startOffset === offset && selection.text === text,
+      ) || {};
+    console.log(currentSelection, 'currentSelection');
     switch (mark.type) {
       case 'code':
-        return <code {...attributes}>{children}</code>;
+        return (
+          <code
+            style={{ backgroundColor: currentSelection.color }}
+            {...attributes}
+          >
+            {children}
+          </code>
+        );
       default:
         return next();
     }
@@ -83,7 +97,9 @@ class HighlightEditor extends Component {
       text, // text highlighted
       startOffset, // start position
       endOffset, // end position
+      color: getRandomColor(),
       // TODO make sure i can highlight with different cases
+      // TODO don't forget to remove loggers
     };
   };
 
@@ -91,9 +107,8 @@ class HighlightEditor extends Component {
     event.preventDefault();
     const { value } = this.state;
     const { toggleSelection } = this.props;
-    console.log('markClicked');
     const selection = this.getSelection(value);
-    toggleSelection(selection);
+    this.selections = toggleSelection(selection);
     this.editor.change(change => {
       // TODO get range of selection within all text
       // TODO check overlapping

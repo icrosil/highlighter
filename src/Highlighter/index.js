@@ -11,9 +11,11 @@ class Highlighter extends Component {
   };
   addSelection = selection => {
     const { selections } = this.state;
+    const newSelections = [...selections, selection];
     this.setState({
-      selections: [...selections, selection],
+      selections: newSelections,
     });
+    return newSelections;
   };
   removeSelection = selection => {
     const { selections } = this.state;
@@ -23,6 +25,7 @@ class Highlighter extends Component {
     this.setState({
       selections: filtered,
     });
+    return filtered;
   };
   toggleSelection = selection => {
     if (!selection.text) return;
@@ -34,9 +37,9 @@ class Highlighter extends Component {
       isEqual(selection, selectionCompare),
     );
     if (alreadyExist) {
-      this.removeSelection(selection);
+      return this.removeSelection(selection);
     } else {
-      this.addSelection(selection);
+      return this.addSelection(selection);
     }
   };
   render() {
