@@ -1,15 +1,6 @@
-import React, { Component } from 'react';
-import './App.css';
+import React from 'react';
 import Highlighter from './Highlighter';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Highlighter></Highlighter>
-      </div>
-    );
-  }
-}
+const App = () => <Highlighter />;
 
 export default App;
