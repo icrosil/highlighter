@@ -1,9 +1,10 @@
 import React from 'react';
 
 import Selection from './Selection';
+import './Selections.css';
 
 const Selections = () => (
-  <section>
+  <section className="selections">
     <Selection />
     <Selection />
   </section>
