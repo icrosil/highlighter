@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
+import Highlighter from './Highlighter';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        app
+        <Highlighter></Highlighter>
       </div>
     );
   }
