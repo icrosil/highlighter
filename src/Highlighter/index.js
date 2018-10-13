@@ -1,8 +1,12 @@
 import React from 'react';
 
+import Text from './Text';
+import Selections from './Selections';
+
 const Highlighter = () => (
   <div>
-    highlighter
+    <Text />
+    <Selections />
   </div>
 );
 
