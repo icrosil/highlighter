@@ -75,8 +75,10 @@ class RichTextEditor extends Component {
 
   getSelection = value => {
     const { focusText } = value;
-    const domRange = findDOMRange(value.selection);
-    const { startOffset, endOffset } = domRange;
+    const { selection } = value;
+    const { start, end } = selection;
+    const { offset: startOffset } = start;
+    const { offset: endOffset } = end;
     const text = focusText.text.slice(startOffset, endOffset);
     return {
       text, // text highlighted
