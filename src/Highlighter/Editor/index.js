@@ -39,7 +39,8 @@ class Editor extends Component {
     const { value } = this.state;
     return (
       <section className="editor">
-        <SlateEditor onChange={this.onChange} value={value} />
+        <h3>Simple Rich Editor</h3>
+        <SlateEditor onChange={this.onChange} value={value} className="slate" />
       </section>
     );
   }
