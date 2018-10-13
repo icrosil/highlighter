@@ -10,6 +10,7 @@ class Highlighter extends Component {
     selections: [],
   };
   toggleSelection = selection => {
+    if (!selection.text) return;
     const { selections } = this.state;
     const alreadyExist = selections.some(selectionCompare =>
       isEqual(selection, selectionCompare),
