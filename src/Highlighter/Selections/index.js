@@ -3,10 +3,10 @@ import React from 'react';
 import Selection from './Selection';
 
 const Selections = () => (
-  <div>
+  <section>
     <Selection />
     <Selection />
-  </div>
+  </section>
 );
 
 Selections.propTypes = {};

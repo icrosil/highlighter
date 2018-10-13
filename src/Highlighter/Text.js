@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Text = () => <div>text</div>;
+const Text = () => <section>text</section>;
 
 Text.propTypes = {};
 

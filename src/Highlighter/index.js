@@ -2,12 +2,13 @@ import React from 'react';
 
 import Text from './Text';
 import Selections from './Selections';
+import './Highlighter.css';
 
 const Highlighter = () => (
-  <div>
+  <main className="highlighter">
     <Text />
     <Selections />
-  </div>
+  </main>
 );
 
 Highlighter.propTypes = {};
