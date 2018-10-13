@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import { Editor, findDOMRange } from 'slate-react';
+import { Editor } from 'slate-react';
 import initialValue from './initialValue';
 import './Editor.css';
 
-class RichTextEditor extends Component {
+class HighlightEditor extends Component {
   state = {
     value: initialValue,
   };
@@ -22,7 +22,7 @@ class RichTextEditor extends Component {
     const { value } = this.state;
     return (
       <div className="editor">
-        <h3>Simple Rich Editor</h3>
+        <h3>Simple Highlight Editor</h3>
         <div className="toolbar">
           {this.renderMarkButton('code', 'highlight')}
         </div>
@@ -63,12 +63,10 @@ class RichTextEditor extends Component {
   };
 
   onChange = ({ value }) => {
-    // get all text - value.document.text
-    // TODO get count of all marks in text
-    // TODO get their position or texts
     this.setState({ value });
   };
 
+  // TODO remove if not needed
   onSelect = (event, { value }, next) => {
     next();
   };
@@ -82,18 +80,17 @@ class RichTextEditor extends Component {
     const text = focusText.text.slice(startOffset, endOffset);
     return {
       text, // text highlighted
-      focusText, // Text object of element
-      startOffset, // start point in Text
-      endOffset, // end point in Text
+      key: focusText.key, // key of Object
+      // TODO make sure i can highlight with different cases
     };
   };
 
   onClickMark = (event, type) => {
     event.preventDefault();
-    const { addSelection } = this.props;
+    const { toggleSelection } = this.props;
     this.editor.change(change => {
       const selection = this.getSelection(change.value);
-      addSelection(selection);
+      toggleSelection(selection);
       // TODO get range of selection within all text
       // TODO check overlapping
       // TODO make overlap logic
@@ -102,6 +99,6 @@ class RichTextEditor extends Component {
   };
 }
 
-RichTextEditor.propTypes = {};
+HighlightEditor.propTypes = {};
 
-export default RichTextEditor;
+export default HighlightEditor;
