@@ -72,25 +72,29 @@ class HighlightEditor extends Component {
   };
 
   getSelection = value => {
-    const { focusText } = value;
+    const { document } = value;
+    const fullText = document.text;
     const { selection } = value;
     const { start, end } = selection;
-    const { offset: startOffset } = start;
-    const { offset: endOffset } = end;
-    const text = focusText.text.slice(startOffset, endOffset);
+    const startOffset = document.getOffset(start.key) + start.offset;
+    const endOffset = document.getOffset(end.key) + end.offset;
+    const text = fullText.slice(startOffset, endOffset);
     return {
       text, // text highlighted
-      key: focusText.key, // key of Object
+      startOffset, // start position
+      endOffset, // end position
       // TODO make sure i can highlight with different cases
     };
   };
 
   onClickMark = (event, type) => {
     event.preventDefault();
+    const { value } = this.state;
     const { toggleSelection } = this.props;
+    console.log('markClicked');
+    const selection = this.getSelection(value);
+    toggleSelection(selection);
     this.editor.change(change => {
-      const selection = this.getSelection(change.value);
-      toggleSelection(selection);
       // TODO get range of selection within all text
       // TODO check overlapping
       // TODO make overlap logic

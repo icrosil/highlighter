@@ -9,23 +9,34 @@ class Highlighter extends Component {
   state = {
     selections: [],
   };
+  addSelection = selection => {
+    const { selections } = this.state;
+    this.setState({
+      selections: [...selections, selection],
+    });
+  };
+  removeSelection = selection => {
+    const { selections } = this.state;
+    const filtered = selections.filter(
+      selectionCompare => !isEqual(selection, selectionCompare),
+    );
+    this.setState({
+      selections: filtered,
+    });
+  };
   toggleSelection = selection => {
     if (!selection.text) return;
     const { selections } = this.state;
+    console.log(selection, 'selection');
+    console.log(selections, 'selections');
+    // TODO is it overlapping current selections ?
     const alreadyExist = selections.some(selectionCompare =>
       isEqual(selection, selectionCompare),
     );
     if (alreadyExist) {
-      const filtered = selections.filter(
-        selectionCompare => !isEqual(selection, selectionCompare),
-      );
-      this.setState({
-        selections: filtered,
-      });
+      this.removeSelection(selection);
     } else {
-      this.setState({
-        selections: [...selections, selection],
-      });
+      this.addSelection(selection);
     }
   };
   render() {

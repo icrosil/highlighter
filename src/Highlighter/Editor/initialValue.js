@@ -17,6 +17,20 @@ const initialValue = Value.fromJSON({
           },
         ],
       },
+      {
+        object: 'block',
+        type: 'paragraph',
+        nodes: [
+          {
+            object: 'text',
+            leaves: [
+              {
+                text: 'A line of text in a paragraph.',
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
 });
