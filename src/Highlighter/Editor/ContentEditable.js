@@ -4,7 +4,7 @@ import Editable from 'react-contenteditable';
 import 'rangy/lib/rangy-textrange';
 import rangy from 'rangy';
 
-import { getRandomColor, hexAverage } from './color';
+import { getRandomColor, hexAverage, invertColor } from './color';
 import Toolbar from './Toolbar';
 
 import './Editor.css';
@@ -64,7 +64,13 @@ class ContentEditable extends Component {
       return (
         <span>
           {splittedBlocks.map((block, key) => (
-            <span key={key} style={{ backgroundColor: block.color }}>
+            <span
+              key={key}
+              style={{
+                backgroundColor: block.color,
+                color: invertColor(block.color),
+              }}
+            >
               {block.text}
             </span>
           ))}
