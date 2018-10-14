@@ -4,7 +4,7 @@ import Editable from 'react-contenteditable';
 import 'rangy/lib/rangy-textrange';
 import rangy from 'rangy';
 
-import { getRandomColor } from './color';
+import { getRandomColor, hexAverage } from './color';
 import Toolbar from './Toolbar';
 
 import './Editor.css';
@@ -41,29 +41,29 @@ class ContentEditable extends Component {
     if (!this.editor) return html;
     const editorNode = this.editor.htmlEl;
     const text = editorNode.innerText;
-    // TODO split all selections into smallest with overlapped colors
     function SplitHighlight({ value, highlightSelections }) {
       const sortedSelections = highlightSelections.sort(
         (selectionA, selectionB) => selectionA.start > selectionB.start,
       );
-      let startPosition = 0;
-      const dividedBlocks = [];
-      sortedSelections.forEach(selection => {
-        if (startPosition !== selection.start) {
-          dividedBlocks.push({
-            text: value.substring(startPosition, selection.start),
-          });
-        }
-        dividedBlocks.push(selection);
-        startPosition = selection.end;
+      const points = highlightSelections.map(({ start, end }) => [start, end]);
+      const flatPoints = points.flat();
+      const pointsFromStartToEnd = [0, ...flatPoints, value.length];
+      const sortedPoints = pointsFromStartToEnd.sort(
+        (pointA, pointB) => pointA > pointB,
+      );
+      const colorOverlap = sortedPoints.map(point => {
+        const selectionsWithinPoint = sortedSelections.filter(
+          selection => selection.start <= point && selection.end > point,
+        );
+        return selectionsWithinPoint.map(({ color }) => color);
       });
-      // ending
-      dividedBlocks.push({
-        text: value.substring(startPosition),
-      });
+      const splittedBlocks = sortedPoints.map((point, index) => ({
+        text: value.substring(point, sortedPoints[index + 1]),
+        color: hexAverage(...colorOverlap[index]),
+      }));
       return (
         <span>
-          {dividedBlocks.map((block, key) => (
+          {splittedBlocks.map((block, key) => (
             <span key={key} style={{ backgroundColor: block.color }}>
               {block.text}
             </span>
@@ -91,7 +91,7 @@ class ContentEditable extends Component {
           disabled={false}
           onChange={this.handleChange}
           tagName="article"
-          className="slate"
+          className="editable"
           ref={this.setRef}
         />
       </div>

@@ -9,6 +9,7 @@ function padToTwo(numberString) {
 
 export function hexAverage() {
   var args = Array.prototype.slice.call(arguments);
+  if (!args.length) return null;
   return args
     .reduce(
       function(previousValue, currentValue) {

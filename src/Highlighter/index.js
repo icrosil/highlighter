@@ -32,8 +32,6 @@ class Highlighter extends Component {
   toggleSelection = selection => {
     if (!selection.text) return;
     const { selections } = this.state;
-    // TODO probably check without color
-    // TODO is it overlapping current selections ?
     const alreadyExist = selections.some(
       selectionCompare =>
         selection.text === selectionCompare.text &&

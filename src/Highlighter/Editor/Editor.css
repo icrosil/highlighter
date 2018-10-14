@@ -3,8 +3,7 @@
   padding: 7px;
 }
 
-/* TODO change slate to editable if worked */
-.slate {
+.editable {
   border: 1px solid #ccc;
   border-radius: 15px;
   display: inline-block;
