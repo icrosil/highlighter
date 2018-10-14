@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import Editable from 'react-contenteditable';
 import 'rangy/lib/rangy-textrange';
 import rangy from 'rangy';
@@ -10,8 +11,8 @@ import './Editor.css';
 class ContentEditable extends Component {
   state = {
     html: `Hello World <br/>
-      Hello World
-      <div>Hello World</div>`,
+    Hello World <br />
+    Hello World`,
   };
   handleChange = event => {
     this.setState({ html: event.target.value });
@@ -22,48 +23,43 @@ class ContentEditable extends Component {
     const textSelected = selection.toString();
     const range = selection.getRangeAt(0);
     const { start, end } = range.toCharacterRange(this.editor.htmlEl);
-    toggleSelection({
+    const selections = toggleSelection({
       text: textSelected,
       start,
       end,
     });
+    this.highlightSelected(selections);
   };
   setRef = editor => {
     this.editor = editor;
   };
-  highlightSelected = () => {
+  highlightSelected = selections => {
     const { html } = this.state;
     if (!this.editor) return html;
-    const { selections } = this.props;
     const editorNode = this.editor.htmlEl;
-    // const dupNode = editorNode.cloneNode(true);
-    // console.log(this.editor, 'this.editor');
-    // TODO find start of all selections
-    selections.map(selection => {
-      // editorNode.childNodes
-      // TODO find start of selection
+    const text = editorNode.innerText;
+    const [selection] = selections;
+    // TODO split all selections into smallest with overlapped colors
+    function SplitOneHighlight({ value, text, start, end }) {
+      const before = value.substring(0, start);
+      const after = value.substring(end);
+      return (
+        <span>
+          {before}
+          <b>{text}</b>
+          {after}
+        </span>
+      );
+    }
+    const splittedHighlight = <SplitOneHighlight value={text} {...selection} />;
+    const resultText = ReactDOMServer.renderToString(splittedHighlight);
+    const resultWithNewLines = resultText.replace(/(?:\r\n|\r|\n)/g, '<br />');
+    this.setState({
+      html: resultWithNewLines,
     });
-    // editorNode.childNodes.forEach(node => {
-    //   // TODO probably optimize loop
-    //   const matchedSelection = selections.find((selection) => {
-    //     console.log(selection, 'selection');
-    //     return selection.start.block === node;
-    //   });
-    //   if (matchedSelection) {
-    //     console.log('block found', node);
-    //     console.log(matchedSelection, 'selection');
-    //   }
-    // });
-    // console.log(dupNode.innerHTML, 'dupNode');
-    // console.log(editorNode, 'this.editor.htmlEl');
-    // console.log(html, 'html');
-    // console.log(selections, 'selections');
-    // TODO try change node and pass it
-    return html;
   };
   render() {
-    // TODO or try to change state ? on toggleSelection
-    const html = this.highlightSelected();
+    const { html } = this.state;
     return (
       <div className="editor">
         <h3>Simple Highlight Editor</h3>

@@ -44,10 +44,7 @@ class Highlighter extends Component {
     const { selections } = this.state;
     return (
       <main className="highlighter">
-        <Editor
-          selections={selections}
-          toggleSelection={this.toggleSelection}
-        />
+        <Editor toggleSelection={this.toggleSelection} />
         <Selections selections={selections} />
       </main>
     );

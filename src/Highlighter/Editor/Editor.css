@@ -7,6 +7,7 @@
 .slate {
   border: 1px solid #ccc;
   border-radius: 15px;
+  display: inline-block;
   padding: 15px;
 }
 
