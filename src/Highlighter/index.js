@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import isEqual from 'lodash/isEqual';
 
 import Editor from './Editor/ContentEditable';
 import Selections from './Selections';
@@ -20,7 +19,10 @@ class Highlighter extends Component {
   removeSelection = selection => {
     const { selections } = this.state;
     const filtered = selections.filter(
-      selectionCompare => !isEqual(selection, selectionCompare),
+      selectionCompare =>
+        selection.text !== selectionCompare.text ||
+        selection.start !== selectionCompare.start ||
+        selection.end !== selectionCompare.end,
     );
     this.setState({
       selections: filtered,
@@ -30,9 +32,13 @@ class Highlighter extends Component {
   toggleSelection = selection => {
     if (!selection.text) return;
     const { selections } = this.state;
+    // TODO probably check without color
     // TODO is it overlapping current selections ?
-    const alreadyExist = selections.some(selectionCompare =>
-      isEqual(selection, selectionCompare),
+    const alreadyExist = selections.some(
+      selectionCompare =>
+        selection.text === selectionCompare.text &&
+        selection.start === selectionCompare.start &&
+        selection.end === selectionCompare.end,
     );
     if (alreadyExist) {
       return this.removeSelection(selection);

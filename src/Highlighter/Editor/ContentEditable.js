@@ -1,9 +1,10 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import Editable from 'react-contenteditable';
 import 'rangy/lib/rangy-textrange';
 import rangy from 'rangy';
 
+import { getRandomColor } from './color';
 import Toolbar from './Toolbar';
 
 import './Editor.css';
@@ -21,12 +22,14 @@ class ContentEditable extends Component {
     const { toggleSelection } = this.props;
     const selection = rangy.getSelection();
     const textSelected = selection.toString();
+    if (!textSelected) return;
     const range = selection.getRangeAt(0);
     const { start, end } = range.toCharacterRange(this.editor.htmlEl);
     const selections = toggleSelection({
       text: textSelected,
       start,
       end,
+      color: getRandomColor(),
     });
     this.highlightSelected(selections);
   };
@@ -38,20 +41,39 @@ class ContentEditable extends Component {
     if (!this.editor) return html;
     const editorNode = this.editor.htmlEl;
     const text = editorNode.innerText;
-    const [selection] = selections;
     // TODO split all selections into smallest with overlapped colors
-    function SplitOneHighlight({ value, text, start, end }) {
-      const before = value.substring(0, start);
-      const after = value.substring(end);
+    function SplitHighlight({ value, highlightSelections }) {
+      const sortedSelections = highlightSelections.sort(
+        (selectionA, selectionB) => selectionA.start > selectionB.start,
+      );
+      let startPosition = 0;
+      const dividedBlocks = [];
+      sortedSelections.forEach(selection => {
+        if (startPosition !== selection.start) {
+          dividedBlocks.push({
+            text: value.substring(startPosition, selection.start),
+          });
+        }
+        dividedBlocks.push(selection);
+        startPosition = selection.end;
+      });
+      // ending
+      dividedBlocks.push({
+        text: value.substring(startPosition),
+      });
       return (
         <span>
-          {before}
-          <b>{text}</b>
-          {after}
+          {dividedBlocks.map((block, key) => (
+            <span key={key} style={{ backgroundColor: block.color }}>
+              {block.text}
+            </span>
+          ))}
         </span>
       );
     }
-    const splittedHighlight = <SplitOneHighlight value={text} {...selection} />;
+    const splittedHighlight = (
+      <SplitHighlight value={text} highlightSelections={selections} />
+    );
     const resultText = ReactDOMServer.renderToString(splittedHighlight);
     const resultWithNewLines = resultText.replace(/(?:\r\n|\r|\n)/g, '<br />');
     this.setState({
