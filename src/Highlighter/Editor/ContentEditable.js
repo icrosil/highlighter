@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Editable from 'react-contenteditable';
+import 'rangy/lib/rangy-textrange';
 import rangy from 'rangy';
 
 import Toolbar from './Toolbar';
@@ -10,7 +11,7 @@ class ContentEditable extends Component {
   state = {
     html: `Hello World <br/>
       Hello World
-      Hello World`,
+      <div>Hello World</div>`,
   };
   handleChange = event => {
     this.setState({ html: event.target.value });
@@ -18,18 +19,9 @@ class ContentEditable extends Component {
   highlight = () => {
     const { toggleSelection } = this.props;
     const selection = rangy.getSelection();
-    debugger;
     const textSelected = selection.toString();
     const range = selection.getRangeAt(0);
-    console.log(range.toCharacterRange, 'range');
-    const start = {
-      ofsset: range.startOffset,
-      block: range.startContainer,
-    };
-    const end = {
-      ofsset: range.endOffset,
-      block: range.endContainer,
-    };
+    const { start, end } = range.toCharacterRange(this.editor.htmlEl);
     toggleSelection({
       text: textSelected,
       start,
