@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import isEqual from 'lodash/isEqual';
 
-import Editor from './Editor';
+import Editor from './Editor/ContentEditable';
 import Selections from './Selections';
 import './Highlighter.css';
 
@@ -30,8 +30,6 @@ class Highlighter extends Component {
   toggleSelection = selection => {
     if (!selection.text) return;
     const { selections } = this.state;
-    console.log(selection, 'selection');
-    console.log(selections, 'selections');
     // TODO is it overlapping current selections ?
     const alreadyExist = selections.some(selectionCompare =>
       isEqual(selection, selectionCompare),
@@ -46,7 +44,10 @@ class Highlighter extends Component {
     const { selections } = this.state;
     return (
       <main className="highlighter">
-        <Editor toggleSelection={this.toggleSelection} />
+        <Editor
+          selections={selections}
+          toggleSelection={this.toggleSelection}
+        />
         <Selections selections={selections} />
       </main>
     );

@@ -60,7 +60,6 @@ class HighlightEditor extends Component {
         selection =>
           selection.startOffset === offset && selection.text === text,
       ) || {};
-    console.log(currentSelection, 'currentSelection');
     switch (mark.type) {
       case 'code':
         return (
@@ -109,8 +108,11 @@ class HighlightEditor extends Component {
     const { toggleSelection } = this.props;
     const selection = this.getSelection(value);
     this.selections = toggleSelection(selection);
+    // TODO find intersections of brackets
+    // TODO split them in individuals with colors
+    // TODO blend color into 1
+    // TODO build marks on top of selections
     this.editor.change(change => {
-      // TODO get range of selection within all text
       // TODO check overlapping
       // TODO make overlap logic
       change.toggleMark(type);
