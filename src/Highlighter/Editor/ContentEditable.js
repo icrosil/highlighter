@@ -17,7 +17,6 @@ class ContentEditable extends Component {
     updateSelections(text, html);
   };
   highlight = () => {
-    debugger;
     const { toggleSelection } = this.props;
     const selection = rangy.getSelection();
     const textSelected = selection.toString();

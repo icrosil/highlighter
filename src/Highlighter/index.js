@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import diff from 'fast-diff';
+import rangy from 'rangy';
 
 import Editor from './Editor/ContentEditable';
 import Selections from './Selections';
@@ -52,7 +53,8 @@ Hello World`,
   };
   updateSelections = (text, html) => {
     const { selections, text: oldText } = this.state;
-    const textDiff = diff(oldText, text);
+    const { focusOffset } = rangy.getSelection();
+    const textDiff = diff(oldText, text, focusOffset);
     let currentPosition = 0;
     const diffWithPoints = textDiff.map(([status, text]) => {
       const update = {
@@ -64,6 +66,7 @@ Hello World`,
       currentPosition += text.length;
       return update;
     });
+    console.log(diffWithPoints, 'diffWithPoints');
     const newChanges = diffWithPoints.filter(point => point.status !== 0);
     const newSelections = selections.map(selection => {
       const updatedSelection = { ...selection };
@@ -82,6 +85,7 @@ Hello World`,
           end > selection.start
         ) {
           updatedSelection.end += size * status;
+          // updatedSelection.start += size * status;
         }
         // change inside
         if (start > selection.start && end < selection.end) {
@@ -102,8 +106,7 @@ Hello World`,
           start <= selection.end &&
           end >= selection.end
         ) {
-          updatedSelection.end +=
-            (selection.end - start || end - selection.end) * status;
+          updatedSelection.end += (selection.end - start) * status;
         }
         // change totally removes selection
         if (start <= selection.start && end >= selection.end) {
@@ -111,6 +114,7 @@ Hello World`,
           updatedSelection.end = null;
         }
       });
+      // console.log(updatedSelection, 'updatedSelection');
       return updatedSelection;
     });
     const nonEmptySelections = newSelections.filter(
@@ -124,6 +128,7 @@ Hello World`,
   };
   render() {
     const { selections, html, text } = this.state;
+    console.log(selections, 'selections');
     return (
       <main className="highlighter">
         <Editor
