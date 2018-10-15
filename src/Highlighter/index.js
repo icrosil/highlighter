@@ -11,13 +11,9 @@ class Highlighter extends Component {
   state = {
     selections: [],
     // html view
-    html: `Hello World<br/>
-      Hello World<br />
-      Hello World`,
+    html: '',
     // string view
-    text: `Hello World
-Hello World
-Hello World`,
+    text: '',
   };
   addSelection = selection => {
     const { selections } = this.state;
@@ -87,7 +83,6 @@ Hello World`,
           end > selection.start
         ) {
           updatedSelection.end += size * status;
-          // updatedSelection.start += size * status;
         }
         // change inside
         if (start > selection.start && end < selection.end) {

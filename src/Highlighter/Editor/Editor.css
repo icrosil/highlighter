@@ -1,4 +1,6 @@
 .editor {
+  display: flex;
+  flex-direction: column;
   flex: 3;
   padding: 7px;
 }
@@ -8,6 +10,7 @@
   border-radius: 15px;
   display: inline-block;
   padding: 15px;
+  flex: 1;
 }
 
 .editable:focus {

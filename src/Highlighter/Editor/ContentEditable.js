@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOMServer from 'react-dom/server';
 import Editable from 'react-contenteditable';
-import 'rangy/lib/rangy-textrange';
-import rangy from 'rangy';
 
 import { getRandomColor, hexAverage, invertColor } from './color';
 import Toolbar from './Toolbar';
+import { getSelectionOffset } from '../utils/rangy';
 
 import './Editor.css';
 
@@ -18,11 +17,8 @@ class ContentEditable extends Component {
   };
   highlight = () => {
     const { toggleSelection } = this.props;
-    const selection = rangy.getSelection();
-    const textSelected = selection.toString();
-    if (!textSelected) return;
-    const range = selection.getRangeAt(0);
-    const { start, end } = range.toCharacterRange(this.editor.htmlEl);
+    const { start, end, text } = getSelectionOffset(this.editor.htmlEl);
+    if (!text) return;
     const selections = toggleSelection({
       start,
       end,
