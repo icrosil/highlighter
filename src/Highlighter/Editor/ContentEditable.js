@@ -31,7 +31,9 @@ class ContentEditable extends Component {
     this.highlightSelected(selections);
   };
   setRef = editor => {
+    const { setRef } = this.props;
     this.editor = editor;
+    setRef(editor);
   };
   highlightSelected = selections => {
     const { html, setHtml } = this.props;

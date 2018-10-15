@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import diff from 'fast-diff';
+import 'rangy/lib/rangy-textrange';
 import rangy from 'rangy';
 
 import Editor from './Editor/ContentEditable';
@@ -51,10 +52,15 @@ Hello World`,
       return this.addSelection(selection);
     }
   };
+  setRef = editor => {
+    this.editor = editor;
+  };
   updateSelections = (text, html) => {
     const { selections, text: oldText } = this.state;
-    const { focusOffset } = rangy.getSelection();
-    const textDiff = diff(oldText, text, focusOffset);
+    const selection = rangy.getSelection();
+    const range = selection.getRangeAt(0);
+    const { start } = range.toCharacterRange(this.editor.htmlEl);
+    const textDiff = diff(oldText, text, start);
     let currentPosition = 0;
     const diffWithPoints = textDiff.map(([status, text]) => {
       const update = {
@@ -66,15 +72,11 @@ Hello World`,
       currentPosition += text.length;
       return update;
     });
-    console.log(diffWithPoints, 'diffWithPoints');
     const newChanges = diffWithPoints.filter(point => point.status !== 0);
     const newSelections = selections.map(selection => {
       const updatedSelection = { ...selection };
       newChanges.forEach(({ text, status, end, start }) => {
         const size = end - start;
-        // change after - do nothing
-        // change before
-        // debugger
         if (end <= selection.start) {
           updatedSelection.start += size * status;
           updatedSelection.end += size * status;
@@ -114,7 +116,6 @@ Hello World`,
           updatedSelection.end = null;
         }
       });
-      // console.log(updatedSelection, 'updatedSelection');
       return updatedSelection;
     });
     const nonEmptySelections = newSelections.filter(
@@ -128,7 +129,6 @@ Hello World`,
   };
   render() {
     const { selections, html, text } = this.state;
-    console.log(selections, 'selections');
     return (
       <main className="highlighter">
         <Editor
@@ -137,6 +137,7 @@ Hello World`,
           updateSelections={this.updateSelections}
           toggleSelection={this.toggleSelection}
           setHtml={html => this.setState({ html })}
+          setRef={this.setRef}
         />
         <Selections text={text} selections={selections} />
       </main>
