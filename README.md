@@ -14,4 +14,7 @@
 ### Edge cases not covered:
 - after highlight copy paste inside of selection may break highlighting
 - after highlight rich formatting breaks :(
+
+### Poor implementation details
 - specs not added
+- structure could be better
