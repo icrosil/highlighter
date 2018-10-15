@@ -10,15 +10,14 @@ import Toolbar from './Toolbar';
 import './Editor.css';
 
 class ContentEditable extends Component {
-  state = {
-    html: `Hello World <br/>
-    Hello World <br />
-    Hello World`,
-  };
   handleChange = event => {
-    this.setState({ html: event.target.value });
+    const { updateSelections } = this.props;
+    const text = event.currentTarget.innerText;
+    const html = event.target.value;
+    updateSelections(text, html);
   };
   highlight = () => {
+    debugger;
     const { toggleSelection } = this.props;
     const selection = rangy.getSelection();
     const textSelected = selection.toString();
@@ -26,7 +25,6 @@ class ContentEditable extends Component {
     const range = selection.getRangeAt(0);
     const { start, end } = range.toCharacterRange(this.editor.htmlEl);
     const selections = toggleSelection({
-      text: textSelected,
       start,
       end,
       color: getRandomColor(),
@@ -37,7 +35,7 @@ class ContentEditable extends Component {
     this.editor = editor;
   };
   highlightSelected = selections => {
-    const { html } = this.state;
+    const { html, setHtml } = this.props;
     if (!this.editor) return html;
     const editorNode = this.editor.htmlEl;
     const text = editorNode.innerText;
@@ -82,12 +80,10 @@ class ContentEditable extends Component {
     );
     const resultText = ReactDOMServer.renderToString(splittedHighlight);
     const resultWithNewLines = resultText.replace(/(?:\r\n|\r|\n)/g, '<br />');
-    this.setState({
-      html: resultWithNewLines,
-    });
+    setHtml(resultWithNewLines);
   };
   render() {
-    const { html } = this.state;
+    const { html } = this.props;
     return (
       <div className="editor">
         <h3>Simple Highlight Editor</h3>
